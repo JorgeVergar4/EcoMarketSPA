@@ -17,6 +17,10 @@ public class UserService {
         if (login == null || password == null){
             return null;
         }else{
+            if(userRepository.findFirstByLogin(login).isPresent()){
+                System.out.println("Duplicate Login");
+                return null;
+            }
             UserModel userModel = new UserModel();
             userModel.setLogin(login);
             userModel.setPassword(password);
