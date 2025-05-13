@@ -9,15 +9,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "users_table")
-public class UserModel {
+@Table(name = "products_table")
+public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
 
-    String login;
+    Integer id_producto;
 
-    String password;
+    String nombre_producto;
 
-    String email;
+    String descripcion_producto;
+
+    Double precio_producto;
+
+    Integer stock_producto;
+
+    Boolean estado_producto;
+
 }

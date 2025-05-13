@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Producto</title>
+</head>
+<body>
+<section>
+    <div class="container p-5 mt-3">
+        <section class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <p class="fs-4">Agregar producto</p>
+
+                        <th:block th:if="${session.succMsg}">
+                            <p class="text-success fw-bold">[[${session.succMsg}]]</p>
+                            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+
+                        <th:block th:if="${session.errorMsg}">
+                            <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+                            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+                    </div>
+
+                    <div class="card-body">
+                        <form action="/productos" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label>Nombre producto</label>
+                                <input type="text" name="nombre_producto" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Descripción del producto</label>
+                                <textarea rows="3" class="form-control" name="descripcion_producto"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Ingrese precio</label>
+                                <input type="number" name="precio_producto" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Ingrese stock</label>
+                                <input type="text" name="stock" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Estado</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" checked value="true" name="isActive" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">Activo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" value="false" name="isActive" id="flexRadioDefault2">
+                                    <label class="form-check-label" for="flexRadioDefault2">Inactivo</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Subir imagen</label>
+                                <input type="file" name="file" class="form-control">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary col-md-12">Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+</body>
+</html>
