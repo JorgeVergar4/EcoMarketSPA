@@ -5,9 +5,7 @@ import com.ecomarketspa.EcoMarketSPA.Service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
@@ -45,5 +43,36 @@ public class UserController {
         }else{
             return "error_page";
         }
+    }
+
+    @GetMapping("/users")
+    public String listUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "user_list";
+    }
+
+    // Formulario para editar un usuario
+    @GetMapping("/edit/{id}")
+    public String editUserForm(@PathVariable Long id, Model model) {
+        UserModel user = userService.getUserById(id);
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "edit_user";
+        }
+        return "error_page";
+    }
+
+    // Guardar la edición del usuario
+    @PostMapping("/edit")
+    public String updateUser(@ModelAttribute UserModel user) {
+        userService.updateUser(user);
+        return "redirect:/users";
+    }
+
+    // Eliminar usuario
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return "redirect:/users";
     }
 }
