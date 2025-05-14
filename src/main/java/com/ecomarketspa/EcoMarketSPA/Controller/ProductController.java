@@ -4,6 +4,7 @@ import com.ecomarketspa.EcoMarketSPA.Model.ProductModel;
 import com.ecomarketspa.EcoMarketSPA.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,22 +15,43 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping
-    public List<ProductModel> listarProductos() { return productService.getAllProducts();}
 
     @PostMapping
-    public ResponseEntity<String> crearProducto(@RequestBody ProductModel producto) {
-        return ResponseEntity.ok("Producto creado");
+    public ResponseEntity<ProductModel> saveProduct(@RequestBody ProductModel product) {
+        ProductModel savedProduct = productService.saveProducto(product);
+        return ResponseEntity.ok(savedProduct);
     }
 
-    @PostMapping()
-    public ProductModel addProducto(@RequestBody ProductModel product) {return productService.saveProducto(product);}
 
-    @GetMapping("{id}")
-    public ProductModel actualizarProducto(@PathVariable int id, @RequestBody ProductModel product) {
-        return productService.updateProducto(product);
+    @GetMapping
+    public ResponseEntity<List<ProductModel>> getAllProducts() {
+        List<ProductModel> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 
-    @DeleteMapping("{id}")
-    public String eliminarProducto(@PathVariable int id) {return productService.deleteProducto(id);}
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductModel> getProductById(@PathVariable int id) {
+        ProductModel product = productService.getIdProducto(id);
+        if (product != null) {
+            return ResponseEntity.ok(product);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Actualizar producto
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductModel> updateProduct(@PathVariable int id, @RequestBody ProductModel product) {
+        product.setId_producto(id);
+        ProductModel updatedProduct = productService.updateProducto(product);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    // Eliminar producto
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int id) {
+        String response = productService.deleteProducto(id);
+        return ResponseEntity.ok(response);
+    }
 }
