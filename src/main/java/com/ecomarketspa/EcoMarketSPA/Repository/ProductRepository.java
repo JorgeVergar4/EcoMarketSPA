@@ -67,14 +67,14 @@ public class ProductRepository {
     }
 
     public void eliminar(int id) {
-        int idPosicion = 0;
         for (int i = 0; i < listaProductos.size(); i++) {
             if (listaProductos.get(i).getId_producto() == id) {
-                idPosicion = i;
+                listaProductos.remove(i);
                 break;
             }
         }
     }
+
 
 
 
