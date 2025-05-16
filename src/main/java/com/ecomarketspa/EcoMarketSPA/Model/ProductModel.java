@@ -14,16 +14,22 @@ public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    Integer id_producto;
+    @Column(name = "id_producto")
+    private Long id;
 
-    String nombre_producto;
+    @Column(name = "nombre_producto")
+    private String nombre;
 
-    String descripcion_producto;
+    @Column(name = "descripcion")
+    private String descripcion;
 
-    Double precio_producto;
+    @Column(name = "precio")
+    private Double precio;
 
-    Integer stock_producto;
+    @Column(name = "stock")
+    private Integer stock;
 
-    Boolean estado_producto;
+    @Column(name = "estado")
+    private Boolean estado;
 
 }

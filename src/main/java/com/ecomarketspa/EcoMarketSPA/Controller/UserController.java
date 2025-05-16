@@ -51,7 +51,7 @@ public class UserController {
         return "user_list";
     }
 
-    // Formulario para editar un usuario
+
     @GetMapping("/edit/{id}")
     public String editUserForm(@PathVariable Long id, Model model) {
         UserModel user = userService.getUserById(id);
@@ -62,14 +62,14 @@ public class UserController {
         return "error_page";
     }
 
-    // Guardar la edición del usuario
+
     @PostMapping("/edit")
     public String updateUser(@ModelAttribute UserModel user) {
         userService.updateUser(user);
         return "redirect:/users";
     }
 
-    // Eliminar usuario
+
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
