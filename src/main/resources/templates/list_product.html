@@ -27,8 +27,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.id}">1</td>
+        <tr th:each="product, iterStat : ${products}">
+        <td th:text="${iterStat.index + 1}">1</td>
             <td th:text="${product.nombre}">Nombre</td>
             <td th:text="${product.descripcion}">Descripción</td>
             <td th:text="${product.precio}">$0.00</td>
