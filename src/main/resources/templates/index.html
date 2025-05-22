@@ -3,9 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>Bienvenido a EcoMarket</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #28a745;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        nav {
+            margin: 40px auto;
+            max-width: 400px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav li {
+            margin-bottom: 15px;
+        }
+
+        nav a {
+            display: block;
+            text-decoration: none;
+            background-color: #28a745;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-<h1>Bienvenido a EcoMarket</h1>
+
+<header>
+    <h1>Bienvenido a EcoMarket</h1>
+</header>
 
 <nav>
     <ul>
@@ -16,5 +75,6 @@
         <li><a th:href="@{/users}">Lista de usuarios</a></li>
     </ul>
 </nav>
+
 </body>
 </html>

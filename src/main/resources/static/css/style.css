@@ -1,95 +1,172 @@
+/* ========== ESTILO GLOBAL PARA BODY Y FONDO ========== */
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to top, #1a1a3c, #8a2be2); /* Degradado nocturno */
+    color: #fff;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
-    background: url(https://picsum.photos/3000/2000/?image=1015);
-    background-size: cover;
-    background-repeat: no-repeat;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* Fondo con textura de estrellas */
 body::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 25%;
+    width: 100%;
     height: 100%;
-    background-color: #03a9f4;
-    opacity: 0.8;
+    background: url('https://www.transparenttextures.com/patterns/stardust.png');
+    opacity: 0.2;
+    z-index: 0;
 }
 
+/* ========== ESTILOS DEL LOGIN ========== */
 .form {
     position: absolute;
     top: 50%;
-    left: 25%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    width: 350px;
-    min-height: 400px;
-    background-color: #fff;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
-    padding: 50px;
-    box-sizing: border-box;
+    width: 360px;
+    background: rgba(255, 255, 255, 0.1); /* Fondo transparente */
+    padding: 2.5rem;
+    border-radius: 20px;
+    backdrop-filter: blur(12px); /* Difuminado */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    color: #fff;
+    text-align: center;
 }
 
 .form h2 {
-    color: #777;
-    margin: 0 0 40px;
-    padding: 0;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    color: #ffffff;
 }
 
-.form .input-box {
+/* Campo de entrada */
+.input-box {
     position: relative;
     margin: 20px 0;
 }
 
-.form .input-box input {
+.input-box input {
     width: 100%;
-    font-size: 16px;
+    padding: 12px;
     border: none;
-    border-bottom: 2px solid #777;
+    border-radius: 12px;
     outline: none;
-    padding: 10px;
-    padding-left: 30px;
-    box-sizing: border-box;
-    font-weight: bold;
-    color: #777;
-}
-
-.form .input-box input:focus,
-.form .input-box input:valid {
-    border-bottom-color: #03a9f4;
-}
-
-.form .input-box .fa {
-    position: absolute;
-    top: 8px;
-    left: 5px;
-    font-size: 18px;
-    color: #777;
-}
-
-.form .input-box input[type="submit"] {
-    border: none;
-    cursor: pointer;
-    background-color: #03a9f4;
+    background: rgba(255, 255, 255, 0.2);
     color: #fff;
     font-weight: bold;
-    transition: 0.5s;
 }
 
-.form .input-box input[type="submit"]:hover {
-    background-color: #ff4987;
+.input-box input::placeholder {
+    color: #ddd;
 }
 
+.input-box input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid #fff;
+}
+
+/* Botón de enviar */
+.input-box input[type="submit"] {
+    background: #ffffff;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.input-box input[type="submit"]:hover {
+    background-color: #c0a3ff;
+    color: #1a1a3c;
+}
+
+/* Enlaces en login */
 .form a {
     text-decoration: none;
-    color: #777;
-    margin-top: 20px;
-    font-weight: bold;
-    display: inline-block;
-    transition: 0.5s;
+    color: #ddd;
+    display: block;
+    margin-top: 1rem;
+    transition: color 0.3s;
+    font-size: 0.9rem;
 }
 
 .form a:hover {
+    color: #fff;
+}
+
+
+/* ========== ESTILOS DEL MENÚ / DASHBOARD ========== */
+
+/* Título del menú */
+h1 {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 36px;
+    color: #ffffff;
+    position: relative;
+    z-index: 1;
+}
+
+/* Tabla */
+table {
+    width: 90%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+    background-color: rgba(3, 169, 244, 0.7);
+    font-weight: bold;
+    color: #fff;
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Enlaces generales */
+a {
+    text-decoration: none;
+    color: #00bfff;
+    font-weight: bold;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #ff4987;
+}
+
+/* Botón volver */
+a[href="/"] {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #00bfff;
+    position: relative;
+    z-index: 1;
+}
+
+a[href="/"]:hover {
     color: #ff4987;
 }
