@@ -2,74 +2,52 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Iniciar Sesión</title>
-    <style>
-        body {
-            background-color: #f4f4f4;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #28a745;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .error {
-            color: red;
-            text-align: center;
-        }
-    </style>
+    <title>Iniciar Sesión - EcoMarket</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+<div class="container glass-effect">
+    <header>
+        <h1><i class="fas fa-sign-in-alt eco-icon"></i>Iniciar Sesión</h1>
+    </header>
 
-<div class="login-container">
-    <h2>Iniciar Sesión</h2>
-    <form th:action="@{/login}" method="post">
-        <input type="text" name="username" placeholder="Usuario" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
-        <button type="submit">Entrar</button>
-        <button type="/">Volver a la pagina principal</button>
+    <form th:action="@{/login}" method="post" th:object="${loginRequest}" class="glass-effect">
+        <div class="form-group">
+            <label for="login">
+                <i class="fas fa-user eco-icon"></i>Usuario
+            </label>
+            <input type="text" id="login" th:field="*{login}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">
+                <i class="fas fa-lock eco-icon"></i>Contraseña
+            </label>
+            <input type="password" id="password" th:field="*{password}" required>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt eco-icon"></i>Entrar
+            </button>
+            <a href="/" class="btn btn-secondary">
+                <i class="fas fa-arrow-left eco-icon"></i>Volver
+            </a>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i>
+            Usuario o contraseña incorrectos
+        </div>
     </form>
-    <p class="error" th:if="${param.error}">Usuario o contraseña incorrectos</p>
-</div>
 
+    <div class="text-center mt-4">
+        <p>¿No tienes una cuenta?</p>
+        <a href="/register" class="btn btn-outline">
+            <i class="fas fa-user-plus eco-icon"></i>Registrarse
+        </a>
+    </div>
+</div>
 </body>
 </html>

@@ -1,38 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Error Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 2rem;
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        .container {
-            border: 1px solid #f5c6cb;
-            background-color: #f1b0b7;
-            padding: 1rem;
-            border-radius: 8px;
-        }
-        a {
-            display: inline-block;
-            margin-top: 1rem;
-            margin-right: 1rem;
-            color: #004085;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    </style>
+    <title>Error - EcoMarket</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <h1>Error: Invalid Input</h1>
-    <p>Has ingresado datos incorrectos. Por favor intente de nuevo.</p>
-    <a href="/register">Ir a registrarse</a>
-    <a href="/login">Ir a loguearse</a>
-    <a href="/">Ir a la página principal</a>
+<div class="container glass-effect">
+    <header>
+        <h1><i class="fas fa-exclamation-triangle eco-icon"></i>Error</h1>
+    </header>
+    <div class="error-content">
+        <p>Lo sentimos, ha ocurrido un error al procesar tu solicitud.</p>
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-home eco-icon"></i>Volver al Inicio
+            </a>
+        </div>
+    </div>
 </div>
 </body>
 </html>
