@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="container glass-effect">
+    <header>
+        <h1><i class="fas fa-leaf eco-icon"></i>Lista de Productos</h1>
+    </header>
+
+    <!-- Mensajes -->
+    <div th:if="${session.succMsg}" class="alert alert-success">
+        <i class="fas fa-check-circle eco-icon"></i>
+        <span th:text="${session.succMsg}"></span>
+    </div>
+    <div th:if="${session.errorMsg}" class="alert alert-danger">
+        <i class="fas fa-exclamation-circle eco-icon"></i>
+        <span th:text="${session.errorMsg}"></span>
+    </div>
+
+    <!-- Tabla de productos -->
+    <div class="table-container glass-effect">
+        <table>
+            <thead>
+            <tr>
+                <th><i class="fas fa-hashtag"></i> ID</th>
+                <th><i class="fas fa-tag"></i> Nombre</th>
+                <th><i class="fas fa-align-left"></i> Descripción</th>
+                <th><i class="fas fa-dollar-sign"></i> Precio</th>
+                <th><i class="fas fa-boxes"></i> Stock</th>
+                <th><i class="fas fa-toggle-on"></i> Estado</th>
+                <th><i class="fas fa-cogs"></i> Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product, iterStat : ${products}">
+                <td th:text="${iterStat.index + 1}">1</td>
+                <td th:text="${product.nombre}">Nombre</td>
+                <td th:text="${product.descripcion}">Descripción</td>
+                <td th:text="${product.precio}">$0.00</td>
+                <td th:text="${product.stock}">0</td>
+                <td>
+                            <span class="badge badge-success" th:if="${product.estado}">
+                                <i class="fas fa-check"></i> Activo
+                            </span>
+                    <span class="badge badge-secondary" th:unless="${product.estado}">
+                                <i class="fas fa-times"></i> Inactivo
+                            </span>
+                </td>
+                <td>
+                    <a th:href="@{'/productos/editar/' + ${product.id}}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a th:href="@{'/productos/eliminar/' + ${product.id}}"
+                       onclick="return confirm('¿Estás seguro de eliminar este producto?');"
+                       class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/productos/agregar" class="btn btn-primary">
+            <i class="fas fa-plus-circle eco-icon"></i>Agregar nuevo producto
+        </a>
+        <a href="/" class="btn btn-secondary">
+            <i class="fas fa-home eco-icon"></i>Volver a inicio
+        </a>
+    </div>
+</div>
+</body>
+</html>

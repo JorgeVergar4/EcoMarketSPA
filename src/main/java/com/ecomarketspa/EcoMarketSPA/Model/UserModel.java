@@ -21,6 +21,5 @@ public class UserModel {
 
     String email;
 
-
-
+    String address;
 }

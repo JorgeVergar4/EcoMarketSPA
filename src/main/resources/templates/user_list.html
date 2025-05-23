@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="container glass-effect">
+    <header>
+        <h1><i class="fas fa-users eco-icon"></i>Lista de Usuarios</h1>
+    </header>
+
+    <div class="table-container glass-effect">
+        <table>
+            <thead>
+            <tr>
+                <th><i class="fas fa-hashtag"></i> ID</th>
+                <th><i class="fas fa-user"></i> Usuario</th>
+                <th><i class="fas fa-envelope"></i> Email</th>
+                <th><i class="fas fa-map-marker-alt"></i> Dirección</th>
+                <th><i class="fas fa-cogs"></i> Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}">1</td>
+                <td th:text="${user.login}">Usuario</td>
+                <td th:text="${user.email}">email@ejemplo.com</td>
+                <td th:text="${user.address}">Dirección</td>
+                <td>
+                    <a th:href="@{'/edit/' + ${user.id}}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a th:href="@{'/delete/' + ${user.id}}"
+                       onclick="return confirm('¿Estás seguro de eliminar este usuario?');"
+                       class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/register" class="btn btn-primary">
+            <i class="fas fa-user-plus eco-icon"></i>Agregar nuevo usuario
+        </a>
+        <a href="/" class="btn btn-secondary">
+            <i class="fas fa-home eco-icon"></i>Volver a inicio
+        </a>
+    </div>
+</div>
+</body>
+</html>
