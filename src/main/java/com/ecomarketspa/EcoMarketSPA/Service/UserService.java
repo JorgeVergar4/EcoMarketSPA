@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    UserModel registerUser(String login, String password, String email);
+    UserModel registerUser(String login, String password, String email, String address);
     UserModel authenticate(String login, String password);
     List<UserModel> getAllUsers();
     UserModel getUserById(Long id);

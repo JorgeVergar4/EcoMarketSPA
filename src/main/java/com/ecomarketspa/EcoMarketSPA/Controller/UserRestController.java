@@ -29,7 +29,7 @@ public class UserRestController {
 
     @PostMapping
     public UserModel registerUser(@RequestBody UserModel user) {
-        return userService.registerUser(user.getLogin(), user.getPassword(), user.getEmail());
+        return userService.registerUser(user.getLogin(), user.getPassword(), user.getEmail(), user.getAddress());
     }
 
     @PutMapping("/{id}")

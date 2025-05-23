@@ -18,21 +18,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel registerUser(String login, String password, String email){
-        if (login == null || password == null){
-            return null;
-        } else {
-            if(userRepository.findFirstByLogin(login).isPresent()){
-                System.out.println("Duplicate Login");
-                return null;
-            }
-            UserModel userModel = new UserModel();
-            userModel.setLogin(login);
-            userModel.setPassword(password);
-            userModel.setEmail(email);
-            return userRepository.save(userModel);
+    public UserModel registerUser(String login, String password, String email, String address) {
+        if (login == null || password == null || email == null || address == null ||
+                login.trim().isEmpty() || password.trim().isEmpty() ||
+                email.trim().isEmpty() || address.trim().isEmpty()) {
+            throw new IllegalArgumentException("Todos los campos son requeridos");
         }
+
+        if (userRepository.findFirstByLogin(login).isPresent()) {
+            throw new RuntimeException("El usuario ya existe");
+        }
+
+        UserModel userModel = new UserModel();
+        userModel.setLogin(login.trim());
+        userModel.setPassword(password.trim());
+        userModel.setEmail(email.trim());
+        userModel.setAddress(address.trim());
+
+        return userRepository.save(userModel);
     }
+
 
     @Override
     public UserModel authenticate(String login, String password){
