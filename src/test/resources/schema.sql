@@ -6,3 +6,11 @@ CREATE TABLE products_table (
                                 stock INTEGER NOT NULL,
                                 estado BOOLEAN NOT NULL
 );
+
+CREATE TABLE users_table (
+                             id INT AUTO_INCREMENT PRIMARY KEY,
+                             login VARCHAR(255) NOT NULL UNIQUE,
+                             password VARCHAR(255) NOT NULL,
+                             email VARCHAR(255) NOT NULL UNIQUE,
+                             address VARCHAR(255) NOT NULL
+);
