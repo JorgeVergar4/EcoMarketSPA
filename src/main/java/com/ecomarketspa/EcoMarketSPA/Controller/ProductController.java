@@ -2,12 +2,16 @@ package com.ecomarketspa.EcoMarketSPA.Controller;
 
 import com.ecomarketspa.EcoMarketSPA.Model.ProductModel;
 import com.ecomarketspa.EcoMarketSPA.Service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("productos/")
+@Tag(name = "Productos", description = "Operacion sobre el nuestro catalogo de productos")
 @Controller
 public class ProductController {
 
@@ -18,6 +22,7 @@ public class ProductController {
     }
 
     // Página principal de productos (lista de productos)
+    @Operation(summary = "Listar productos", description = "Devuelve la lista de todos los productos")
     @GetMapping("/productos")
     public String mostrarProductos(Model model) {
         List<ProductModel> productos = productService.findAll();
@@ -26,6 +31,7 @@ public class ProductController {
     }
 
     // Mostrar formulario para agregar producto
+    @Operation(summary = "Formulario para agregar producto", description = "Muestra el formulario para registrar un nuevo producto")
     @GetMapping("/productos/agregar")
     public String showAddProductForm(Model model) {
         model.addAttribute("productRequest", new ProductModel());
@@ -33,6 +39,7 @@ public class ProductController {
     }
 
     // Procesar registro de producto
+    @Operation(summary = "Registrar producto", description = "Registra un nuevo producto en el sistema")
     @PostMapping("/productos/agregar")
     public String saveProduct(@ModelAttribute("productRequest") ProductModel productModel) {
         System.out.println("Producto recibido: " + productModel);
@@ -41,6 +48,7 @@ public class ProductController {
     }
 
     // Mostrar formulario de edición
+    @Operation(summary = "Formulario para editar producto", description = "Muestra un formulario para modificar un producto existente")
     @GetMapping("/productos/editar/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
         ProductModel product = productService.getIdProducto(id);
@@ -52,6 +60,7 @@ public class ProductController {
     }
 
     // Procesar edición
+    @Operation(summary = "Actualizar producto", description = "Guarda los cambios realizados a un producto")
     @PostMapping("/productos/editar")
     public String updateProduct(@ModelAttribute ProductModel product) {
         productService.updateProducto(product);
@@ -59,6 +68,7 @@ public class ProductController {
     }
 
     // Eliminar producto
+    @Operation(summary = "Eliminar producto", description = "Elimina un producto por su ID")
     @GetMapping("/productos/eliminar/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProducto(id);
