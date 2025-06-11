@@ -2,13 +2,18 @@ package com.ecomarketspa.EcoMarketSPA.Controller;
 
 import com.ecomarketspa.EcoMarketSPA.Model.ProductModel;
 import com.ecomarketspa.EcoMarketSPA.Service.ProductService;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -28,9 +33,18 @@ public class ProductRestController {
 
     // Obtener producto por ID
     @GetMapping("/{id}")
-    public ResponseEntity<ProductModel> getProductById(@PathVariable Long id) {
-        ProductModel product = productService.getIdProducto(id);
-        return product != null ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
+    public EntityModel<ProductModel> getProductById(@PathVariable Long id) {
+        ProductModel producto = productService.getIdProducto(id);
+        if (producto == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado");
+        }
+
+        return EntityModel.of(producto,
+                linkTo(methodOn(ProductRestController.class).getProductById(id)).withSelfRel(),
+                linkTo(methodOn(ProductController.class).editProductForm(id, null)).withRel("editar"),
+                linkTo(methodOn(ProductController.class).deleteProduct(id)).withRel("eliminar"),
+                linkTo(methodOn(ProductController.class).mostrarProductos(null)).withRel("todos")
+        );
     }
 
     // Crear producto
