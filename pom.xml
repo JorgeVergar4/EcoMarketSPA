@@ -119,7 +119,7 @@
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 			</dependency>
-		<!-- implementacion se swagger -->
+		<!-- implementacion se OpenApi -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
