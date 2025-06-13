@@ -21,7 +21,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Pág principal de productos (lista de productos)
+    // Pág principal de productos (lista de producto)
     @Operation(summary = "Listar productos", description = "Devuelve la lista de todos los productos")
     @GetMapping("")
     public String mostrarProductos(Model model) {
