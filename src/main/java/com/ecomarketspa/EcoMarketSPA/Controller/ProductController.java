@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("productos")
+@Tag(name = "Productos", description = "Operaciones sobre nuestro catálogo de productos")
 @Controller
-@RequestMapping("/productos")
-@Tag(name = "Productos", description = "Operación sobre el catálogo de productos")
 public class ProductController {
 
     private final ProductService productService;
@@ -21,6 +21,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // Pág principal de productos (lista de productos)
     @Operation(summary = "Listar productos", description = "Devuelve la lista de todos los productos")
     @GetMapping("")
     public String mostrarProductos(Model model) {
@@ -29,14 +30,16 @@ public class ProductController {
         return "list_product";
     }
 
-    @Operation(summary = "Formulario para agregar producto")
+    // agregar producto
+    @Operation(summary = "Formulario para agregar producto", description = "Muestra el formulario para registrar un nuevo producto")
     @GetMapping("/agregar")
     public String showAddProductForm(Model model) {
         model.addAttribute("productRequest", new ProductModel());
         return "add_product";
     }
 
-    @Operation(summary = "Registrar producto")
+    // Procesar registro de producto
+    @Operation(summary = "Registrar producto", description = "Registra un nuevo producto en el sistema")
     @PostMapping("/agregar")
     public String saveProduct(@ModelAttribute("productRequest") ProductModel productModel) {
         System.out.println("Producto recibido: " + productModel);
@@ -44,7 +47,8 @@ public class ProductController {
         return saved == null ? "error_page" : "redirect:/productos";
     }
 
-    @Operation(summary = "Formulario para editar producto")
+    // Mostrar formulario de edición
+    @Operation(summary = "Formulario para editar producto", description = "Muestra un formulario para modificar un producto existente")
     @GetMapping("/editar/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
         ProductModel product = productService.getIdProducto(id);
@@ -55,18 +59,19 @@ public class ProductController {
         return "error_page";
     }
 
-    @Operation(summary = "Actualizar producto")
+    // Procesar edición
+    @Operation(summary = "Actualizar producto", description = "Guarda los cambios realizados a un producto")
     @PostMapping("/editar")
     public String updateProduct(@ModelAttribute ProductModel product) {
         productService.updateProducto(product);
         return "redirect:/productos";
     }
 
-    @Operation(summary = "Eliminar producto")
+    // Eliminar producto
+    @Operation(summary = "Eliminar producto", description = "Elimina un producto por su ID")
     @GetMapping("/eliminar/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProducto(id);
         return "redirect:/productos";
     }
 }
-
