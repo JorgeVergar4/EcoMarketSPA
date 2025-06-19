@@ -9,6 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,16 +53,40 @@ public class ProductRestController {
 
 
     @GetMapping
-    @Operation(summary = "Obtener todos los productos", description = "Retorna una lista de productos")
-    public List<ProductDto> getAllProducts() {
-        return productService.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    @Operation(summary = "Obtener todos los productos")
+    public ResponseEntity<CollectionModel<EntityModel<ProductDto>>> getAllProducts() {
+        List<EntityModel<ProductDto>> products = productService.findAll().stream()
+                .map(this::toDto)
+                .map(dto -> EntityModel.of(dto,
+                        linkTo(methodOn(ProductRestController.class).getProductById(dto.getId())).withSelfRel()
+                ))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<ProductDto>> collectionModel = CollectionModel.of(products);
+        collectionModel.add(linkTo(methodOn(ProductRestController.class).getAllProducts()).withSelfRel());
+        collectionModel.add(linkTo(methodOn(ProductRestController.class).createProduct(null)).withRel("crear"));
+
+        return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar producto por ID", description = "Devuelve un producto según su ID")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    @Operation(summary = "Buscar producto por ID")
+    public ResponseEntity<EntityModel<ProductDto>> getProductById(@PathVariable Long id) {
         ProductModel product = productService.getIdProducto(id);
-        return product != null ? ResponseEntity.ok(toDto(product)) : ResponseEntity.notFound().build();
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ProductDto productDto = toDto(product);
+
+        // Crear enlaces HATEOAS
+        EntityModel<ProductDto> model = EntityModel.of(productDto);
+        model.add(linkTo(methodOn(ProductRestController.class).getProductById(id)).withSelfRel());
+        model.add(linkTo(methodOn(ProductRestController.class).getAllProducts()).withRel("todos-los-productos"));
+        model.add(linkTo(methodOn(ProductRestController.class).updateProduct(id, null)).withRel("actualizar"));
+        model.add(linkTo(methodOn(ProductRestController.class).deleteProduct(id)).withRel("eliminar"));
+
+        return ResponseEntity.ok(model);
     }
 
     @PostMapping
