@@ -5,11 +5,15 @@ import com.ecomarketspa.EcoMarketSPA.Model.UserModel;
 import com.ecomarketspa.EcoMarketSPA.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -23,14 +27,12 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    // 🔁 Conversión de modelo a DTO
     private UserDto toDto(UserModel model) {
         UserDto dto = new UserDto();
         dto.setId(model.getId().longValue());
         dto.setLogin(model.getLogin());
         dto.setEmail(model.getEmail());
         dto.setAddress(model.getAddress());
-        // No exponemos la contraseña
         return dto;
     }
 
@@ -53,44 +55,68 @@ public class UserRestController {
                 userDto.getEmail(),
                 userDto.getAddress()
         );
-        return registered != null
-                ? ResponseEntity.ok(toDto(registered))
-                : ResponseEntity.badRequest().body("Error al registrar usuario");
+        if (registered == null) {
+            return ResponseEntity.badRequest().body("Error al registrar usuario");
+        }
+
+        UserDto dto = toDto(registered);
+        EntityModel<UserDto> resource = EntityModel.of(dto,
+                linkTo(methodOn(UserRestController.class).getUserById(dto.getId())).withSelfRel(),
+                linkTo(methodOn(UserRestController.class).getAllUsers()).withRel("all-users")
+        );
+
+        return ResponseEntity.ok(resource);
     }
 
     @Operation(summary = "Iniciar sesión de usuario")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto userDto) {
-        UserModel authenticated = userService.authenticate(
-                userDto.getLogin(),
-                userDto.getPassword()
-        );
-        if (authenticated != null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "¡Bienvenido! Has iniciado sesión correctamente");
-            response.put("user", toDto(authenticated));
-            return ResponseEntity.ok(response);
-        } else {
+        UserModel authenticated = userService.authenticate(userDto.getLogin(), userDto.getPassword());
+        if (authenticated == null) {
             return ResponseEntity.badRequest().body("Credenciales inválidas");
         }
+
+        UserDto dto = toDto(authenticated);
+        EntityModel<UserDto> resource = EntityModel.of(dto,
+                linkTo(methodOn(UserRestController.class).getUserById(dto.getId())).withSelfRel()
+        );
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "¡Bienvenido! Has iniciado sesión correctamente");
+        response.put("user", resource);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Obtener lista de todos los usuarios")
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> usuarios = userService.getAllUsers()
-                .stream()
+    public ResponseEntity<CollectionModel<EntityModel<UserDto>>> getAllUsers() {
+        List<EntityModel<UserDto>> users = userService.getAllUsers().stream()
                 .map(this::toDto)
+                .map(dto -> EntityModel.of(dto,
+                        linkTo(methodOn(UserRestController.class).getUserById(dto.getId())).withSelfRel()
+                ))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(usuarios);
+
+        return ResponseEntity.ok(CollectionModel.of(users,
+                linkTo(methodOn(UserRestController.class).getAllUsers()).withSelfRel()));
     }
 
     @Operation(summary = "Obtener un usuario por ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         UserModel user = userService.getUserById(id);
-        return user != null ? ResponseEntity.ok(toDto(user))
-                : ResponseEntity.notFound().build();
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UserDto dto = toDto(user);
+        EntityModel<UserDto> resource = EntityModel.of(dto,
+                linkTo(methodOn(UserRestController.class).getUserById(id)).withSelfRel(),
+                linkTo(methodOn(UserRestController.class).updateUser(id, dto)).withRel("update"),
+                linkTo(methodOn(UserRestController.class).deleteUser(id)).withRel("delete")
+        );
+
+        return ResponseEntity.ok(resource);
     }
 
     @Operation(summary = "Actualizar un usuario por ID")
