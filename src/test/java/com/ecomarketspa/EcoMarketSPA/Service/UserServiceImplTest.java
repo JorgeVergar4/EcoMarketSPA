@@ -7,6 +7,7 @@ import com.ecomarketspa.EcoMarketSPA.Service.Impl.UserServiceImpl;
 import com.ecomarketspa.EcoMarketSPA.Service.email.EmailProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.List;
@@ -18,13 +19,15 @@ public class UserServiceImplTest {
 
     private UserRepository userRepository;
     private EmailProducer emailProducer;
+    private PasswordEncoder passwordEncoder;
     private UserServiceImpl userService;
 
     @BeforeEach
     public void setUp() {
         userRepository = mock(UserRepository.class);
         emailProducer = mock(EmailProducer.class);
-        userService = new UserServiceImpl(userRepository, emailProducer);
+        passwordEncoder = mock(PasswordEncoder.class);
+        userService = new UserServiceImpl(userRepository, emailProducer, passwordEncoder);
     }
 
     @Test
@@ -74,24 +77,47 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testAuthenticateReturnsUserIfFound() {
+    public void testAuthenticateReturnsUserIfFoundAndPasswordMatches() {
+        String login = "login";
+        String rawPassword = "rawPass";
+        String encodedPassword = "encodedPass";
+
         UserModel user = new UserModel();
-        user.setLogin("login");
-        user.setPassword("pass");
+        user.setLogin(login);
+        user.setPassword(encodedPassword);
 
-        when(userRepository.findByLoginAndPassword("login", "pass")).thenReturn(Optional.of(user));
+        when(userRepository.findFirstByLogin(login)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(rawPassword, encodedPassword)).thenReturn(true);
 
-        UserModel result = userService.authenticate("login", "pass");
+        UserModel result = userService.authenticate(login, rawPassword);
 
         assertNotNull(result);
-        assertEquals("login", result.getLogin());
+        assertEquals(login, result.getLogin());
     }
 
     @Test
-    public void testAuthenticateReturnsNullIfNotFound() {
-        when(userRepository.findByLoginAndPassword("login", "wrong")).thenReturn(Optional.empty());
+    public void testAuthenticateReturnsNullIfPasswordDoesNotMatch() {
+        String login = "login";
+        String rawPassword = "wrongPass";
+        String encodedPassword = "encodedPass";
 
-        UserModel result = userService.authenticate("login", "wrong");
+        UserModel user = new UserModel();
+        user.setLogin(login);
+        user.setPassword(encodedPassword);
+
+        when(userRepository.findFirstByLogin(login)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(rawPassword, encodedPassword)).thenReturn(false);
+
+        UserModel result = userService.authenticate(login, rawPassword);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void testAuthenticateReturnsNullIfUserNotFound() {
+        when(userRepository.findFirstByLogin("login")).thenReturn(Optional.empty());
+
+        UserModel result = userService.authenticate("login", "anyPass");
 
         assertNull(result);
     }

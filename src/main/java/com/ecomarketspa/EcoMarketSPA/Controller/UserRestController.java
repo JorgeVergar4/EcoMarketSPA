@@ -3,17 +3,23 @@ package com.ecomarketspa.EcoMarketSPA.Controller;
 import com.ecomarketspa.EcoMarketSPA.Dto.UserDto;
 import com.ecomarketspa.EcoMarketSPA.Model.UserModel;
 import com.ecomarketspa.EcoMarketSPA.Service.UserService;
+import com.ecomarketspa.EcoMarketSPA.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/users")
@@ -141,5 +147,17 @@ public class UserRestController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al eliminar usuario");
         }
+    }
+
+    //Endpoint protegido: perfil de usuario autenticado (requiere JWT)
+    @Operation(
+            summary = "Ver perfil del usuario autenticado",
+            description = "Este endpoint requiere autenticación con JWT",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @GetMapping("/profile")
+    public ResponseEntity<UserDto> getUserProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserModel user = userDetails.getUser();
+        return ResponseEntity.ok(toDto(user));
     }
 }
