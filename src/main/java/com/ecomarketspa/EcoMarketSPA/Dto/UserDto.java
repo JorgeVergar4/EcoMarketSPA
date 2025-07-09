@@ -1,41 +1,32 @@
-package com.ecomarketspa.EcoMarketSPA.Model;
+package com.ecomarketspa.EcoMarketSPA.Dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
 
-@Schema(hidden = true)
-@Entity
-@Table(name = "users_table")
-public class UserModel {
+@Schema(description = "DTO que representa un usuario del sistema")
+public class UserDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Schema(description = "ID del usuario", example = "1")
+    private Long id;
 
+    @Schema(description = "Nombre de usuario (login)", example = "eco_user01")
     private String login;
 
+    @Schema(description = "Contraseña del usuario", example = "segura123")
     private String password;
 
+    @Schema(description = "Correo electrónico del usuario", example = "usuario@ecomarket.cl")
     private String email;
 
+    @Schema(description = "Dirección del usuario", example = "Av. Principal 123, Santiago")
     private String address;
 
-    public UserModel() {
-    }
+    // Getters y Setters
 
-    public UserModel(Integer id, String login, String password, String email, String address) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.email = email;
-        this.address = address;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

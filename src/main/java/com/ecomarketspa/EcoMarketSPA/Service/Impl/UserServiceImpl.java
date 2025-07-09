@@ -1,18 +1,16 @@
 package com.ecomarketspa.EcoMarketSPA.Service.Impl;
 
-
 import com.ecomarketspa.EcoMarketSPA.Dto.EmailDto;
 import com.ecomarketspa.EcoMarketSPA.Model.UserModel;
 import com.ecomarketspa.EcoMarketSPA.Repository.UserRepository;
 import com.ecomarketspa.EcoMarketSPA.Service.UserService;
 import com.ecomarketspa.EcoMarketSPA.Service.email.EmailProducer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.util.HtmlUtils;
 
 @Slf4j
 @Service
@@ -20,11 +18,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final EmailProducer emailProducer;
+    private final PasswordEncoder passwordEncoder;
 
-
-    public UserServiceImpl(UserRepository userRepository, EmailProducer emailProducer) {
+    public UserServiceImpl(UserRepository userRepository,
+                           EmailProducer emailProducer,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.emailProducer = emailProducer;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -41,7 +42,8 @@ public class UserServiceImpl implements UserService {
 
         UserModel userModel = new UserModel();
         userModel.setLogin(login.trim());
-        userModel.setPassword(password.trim());
+        // Codificamos la contraseña aquí
+        userModel.setPassword(passwordEncoder.encode(password.trim()));
         userModel.setEmail(email.trim());
         userModel.setAddress(address.trim());
 
@@ -51,7 +53,6 @@ public class UserServiceImpl implements UserService {
             sendWelcomeEmail(savedUser);
         } catch (Exception e) {
             log.error("Error al enviar el email de bienvenida: {}", e.getMessage());
-
         }
 
         return savedUser;
@@ -95,12 +96,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-
-
     @Override
-    public UserModel authenticate(String login, String password){
-        return userRepository.findByLoginAndPassword(login, password).orElse(null);
+    public UserModel authenticate(String login, String rawPassword) {
+        return userRepository.findFirstByLogin(login)
+                .filter(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
+                .orElse(null);
     }
 
     @Override

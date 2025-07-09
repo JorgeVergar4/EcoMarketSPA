@@ -2,6 +2,9 @@ package com.ecomarketspa.EcoMarketSPA.Controller;
 
 import com.ecomarketspa.EcoMarketSPA.Model.UserModel;
 import com.ecomarketspa.EcoMarketSPA.Service.UserService;
+import com.ecomarketspa.EcoMarketSPA.security.CustomUserDetails;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,4 +78,17 @@ public class UserController {
         userService.deleteUserById(id);
         return "redirect:/users";
     }
+
+    @GetMapping("/user/profile")
+    @ResponseBody
+    public ResponseEntity<?> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body("No autenticado.");
+        }
+
+        UserModel user = userDetails.getUser();
+
+        return ResponseEntity.ok(user);
+    }
+
 }
